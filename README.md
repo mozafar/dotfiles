@@ -1,7 +1,7 @@
 # dotfiles
 ## Install requirements
 ```sh
-sudo pacman -S alacritty dmenu imagemagick i3lock
+sudo pacman -S alacritty dmenu imagemagick i3lock nitrogen
 ```
 
 ## Fonts
