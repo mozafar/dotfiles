@@ -19,7 +19,7 @@ Config { font = "xft:JetBrainsMono Nerd Font Mono:size=10:bold:antialias=true"
                             "-t", "<action=`brightnessctl set +10% --device=acpi_video0` button=4><action=`brightnessctl set 10%- --device=acpi_video0` button=5><fc=#fabd2f><fn=1>盛</fn> <percent></fc></action></action>"
                      ] 10
                      , Run Wireless "wlp3s0" [
-                            "-t", "<fc=#d3869b><fn=1>直</fn> <essid></fc>" 
+                            "-t", "<fc=#d3869b><fn=1>直</fn> <ssid></fc>" 
                      ] 10
                      , Run Cpu [
                             "-L","3",
@@ -43,9 +43,11 @@ Config { font = "xft:JetBrainsMono Nerd Font Mono:size=10:bold:antialias=true"
                      ]
                     , Run UnsafeStdinReader
                     , Run Com "/home/mozi/.config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 10
+                    , Run DiskU [("/", "<fc=#d79921><fn=1></fn> <usedp>%</fc>")]
+                            ["-L", "10", "-H", "70", "-l", "#d79921", "-h", "#fb4934"] 20
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%UnsafeStdinReader% }{  %cpu% %coretemp% | %memory% | %wlp3s0wi% | %alsa:default:Master% | %bright% | %date% | %kbd% %trayerpad%"
+       , template = "%UnsafeStdinReader% }{  %cpu% %coretemp% | %memory% | %disku% | %wlp3s0wi% | %alsa:default:Master% | %bright% | %date% | %kbd% %trayerpad%"
        }
 
