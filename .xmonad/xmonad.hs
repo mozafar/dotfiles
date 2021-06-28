@@ -14,6 +14,7 @@ import XMonad.Layout.Grid
 import XMonad.Layout.Spiral
 import XMonad.Layout.Spacing
 import XMonad.Layout.Renamed
+import XMonad.Layout.IndependentScreens
 
 import Data.Ratio
 import Data.Maybe (fromJust)
@@ -308,10 +309,15 @@ myStartupHook = do
 -- Run xmonad with the settings you specify. No need to modify this.
 --
 main = do
-	xmproc <- spawnPipe "xmobar -x 0 /home/mozi/.config/xmobar/xmobar.hs"
-	xmonad $ withUrgencyHook NoUrgencyHook $ docks defaults {
+    xmproc0 <- spawnPipe "xmobar -x 0 /home/mozi/.config/xmobar/xmobar.hs"
+    xmproc1 <- spawnPipe "xmobar -x 1 /home/mozi/.config/xmobar/xmobar.hs"
+    -- n <- countScreens
+    -- xmprocs <- mapM (\i -> spawnPipe $ "xmobar /home/mozi/.config/xmobar/xmobar-" ++ show i ++ ".sh -x " ++ show i) [0..n-1]
+    -- xmprocs <- mapM (\i -> spawnPipe $ "xmobar /home/mozi/.config/xmobar/xmobar.sh -x " ++ show i) [0..n-1]
+    xmonad $ withUrgencyHook NoUrgencyHook $ docks defaults {
         logHook = dynamicLogWithPP $ xmobarPP { 
-            ppOutput = hPutStrLn xmproc
+            ppOutput = \x -> hPutStrLn xmproc0 x
+                          >> hPutStrLn xmproc1 x
             , ppCurrent = xmobarColor gruvYellowLight "" . wrap "[" "]" -- Current workspace in xmobar
             , ppVisible = xmobarColor gruvPurpleLight "" . clickable               -- Visible but not current workspace
             , ppHidden = xmobarColor gruvFgDark "" . wrap "" "" . clickable   -- Hidden workspaces in xmobar
