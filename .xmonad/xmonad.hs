@@ -302,7 +302,7 @@ myStartupHook = do
     spawnOnce "xrandr --output LVDS1 --primary --mode 1366x768 --pos 277x1080 --rotate normal --output VGA1 --off --output VIRTUAL1 --off --output LVDS-1-1 --off --output HDMI-1-0 --mode 1920x1080 --pos 0x0 --rotate normal --output VGA-1-1 --off &"
     spawnOnce "setxkbmap -layout us,ir -option grp:caps_toggle &"
     spawnOnce "nitrogen --restore &"
-    spawnOnce "trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --widthtype request --transparent true --alpha 0 --tint 0x282828  --height 21 &"
+    spawnOnce "trayer --monitor primary --edge top --align right --SetDockType true --SetPartialStrut true --expand true --widthtype request --transparent true --alpha 0 --tint 0x282828  --height 21 &"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
@@ -310,8 +310,8 @@ myStartupHook = do
 -- Run xmonad with the settings you specify. No need to modify this.
 --
 main = do
-    xmproc0 <- spawnPipe "xmobar -x 0 /home/mozi/.config/xmobar/xmobar.hs"
-    xmproc1 <- spawnPipe "xmobar -x 1 /home/mozi/.config/xmobar/xmobar.hs"
+    xmproc0 <- spawnPipe "xmobar -x 0 /home/mozi/.config/xmobar/xmobar0.hs"
+    xmproc1 <- spawnPipe "xmobar -x 1 /home/mozi/.config/xmobar/xmobar1.hs"
     -- n <- countScreens
     -- xmprocs <- mapM (\i -> spawnPipe $ "xmobar /home/mozi/.config/xmobar/xmobar-" ++ show i ++ ".sh -x " ++ show i) [0..n-1]
     -- xmprocs <- mapM (\i -> spawnPipe $ "xmobar /home/mozi/.config/xmobar/xmobar.sh -x " ++ show i) [0..n-1]
