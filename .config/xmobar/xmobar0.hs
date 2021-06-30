@@ -42,12 +42,12 @@ Config { font = "xft:JetBrainsMono Nerd Font Mono:size=10:bold:antialias=true"
                             ("ir","IR")
                      ]
                     , Run UnsafeStdinReader
-                    -- , Run Com "/home/mozi/.config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 10
+                    , Run Com "/home/mozi/.config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 10
                     , Run DiskU [("/", "<fc=#d79921><fn=1></fn> <usedp>%</fc>")]
                             ["-L", "10", "-H", "70", "-l", "#d79921", "-h", "#fb4934"] 20
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%UnsafeStdinReader% }{  %cpu% %coretemp% | %memory% | %disku% | %wlp3s0wi% | %alsa:default:Master% | %bright% | %date% | %kbd% "
+       , template = "%UnsafeStdinReader% }{  %cpu% %coretemp% | %memory% | %disku% | %wlp3s0wi% | %alsa:default:Master% | %bright% | %date% | %kbd% %trayerpad%"
        }
 

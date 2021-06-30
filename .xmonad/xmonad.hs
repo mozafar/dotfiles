@@ -242,13 +242,13 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 --      -- Percent of screen to increment by when resizing panes
 --      delta   = 3/100
 
-myLayout = smartBorders $ smartSpacing 5 $ avoidStruts (layoutTall ||| layoutSpiral ||| layoutGrid ||| layoutMirror ||| layoutFull)
+myLayout = layoutTall ||| layoutSpiral ||| layoutGrid ||| layoutMirror ||| layoutFull
     where
-      layoutTall = renamed [Replace "T"] $ Tall 1 (3/100) (1/2)
-      layoutSpiral = renamed [Replace "S"] $ spiral (125 % 146)
-      layoutGrid = renamed [Replace "G"] $ Grid
-      layoutMirror = renamed [Replace "M"] $ Mirror (Tall 1 (3/100) (3/5))
-      layoutFull = renamed [Replace "F"] $ Full
+      layoutTall = renamed [Replace "T"] $ smartBorders $ smartSpacing 5 $ avoidStruts (Tall 1 (3/100) (1/2))
+      layoutSpiral = renamed [Replace "S"] $ smartBorders $ smartSpacing 5 $ avoidStruts (spiral (125 % 146))
+      layoutGrid = renamed [Replace "G"] $ smartBorders $ smartSpacing 5 $ avoidStruts (Grid)
+      layoutMirror = renamed [Replace "M"] $ smartBorders $ smartSpacing 5 $ avoidStruts (Mirror (Tall 1 (3/100) (3/5)))
+      layoutFull = renamed [Replace "F"] $ smartBorders $ smartSpacing 5 $ avoidStruts (Full)
 
 ------------------------------------------------------------------------
 -- Window rules:
