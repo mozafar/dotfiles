@@ -1,13 +1,17 @@
 import XMonad
 import Data.Monoid
 import System.Exit
+import Control.Monad (liftM2)
 
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 
+import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.UrgencyHook
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageHelpers(doFullFloat, doCenterFloat, isFullscreen, isDialog)
 
 import Graphics.X11.ExtraTypes.XF86 (xF86XK_AudioLowerVolume, xF86XK_AudioRaiseVolume, xF86XK_AudioMute)
 import XMonad.Layout.Grid
@@ -16,6 +20,8 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.Renamed
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.NoBorders
+
+import XMonad.Actions.CycleWS
 
 import Data.Ratio
 import Data.Maybe (fromJust)
@@ -178,11 +184,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
-    --
-    -- [((m .|. modm, k), windows $ f i)
-    --     | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-    --     , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    -- ++
     [((myModMask, key), (windows $ W.greedyView ws))
         | (key,ws) <- myWorkspacesWithKeys]
     ++
@@ -220,28 +221,6 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 ------------------------------------------------------------------------
 -- Layouts:
 
--- You can specify and transform your layouts by modifying these values.
--- If you change layout bindings be sure to use 'mod-shift-space' after
--- restarting (with 'mod-q') to reset your layout state to the new
--- defaults, as xmonad preserves your old layout settings by default.
---
--- The available layouts.  Note that each layout is separated by |||,
--- which denotes layout choice.
---
--- myLayout = avoidStruts (tiled ||| Mirror tiled ||| Grid ||| Full)
---   where
---      -- default tiling algorithm partitions the screen into two panes
---      tiled   = Tall nmaster delta ratio
-
---      -- The default number of windows in the master pane
---      nmaster = 1
-
---      -- Default proportion of screen occupied by master pane
---      ratio   = 1/2
-
---      -- Percent of screen to increment by when resizing panes
---      delta   = 3/100
-
 myLayout = layoutTall ||| layoutSpiral ||| layoutGrid ||| layoutMirror ||| layoutFull
     where
       layoutTall = renamed [Replace "T"] $ smartBorders $ smartSpacing 5 $ avoidStruts (Tall 1 (3/100) (1/2))
@@ -252,25 +231,39 @@ myLayout = layoutTall ||| layoutSpiral ||| layoutGrid ||| layoutMirror ||| layou
 
 ------------------------------------------------------------------------
 -- Window rules:
-
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window. You can use this to, for example, always float a
--- particular program, or have a client always appear on a particular
--- workspace.
---
--- To find the property name associated with a program, use
--- > xprop | grep WM_CLASS
--- and click on the client you're interested in.
---
--- To match on the WM_NAME, you can use 'title' in the same way that
--- 'className' and 'resource' are used below.
---
-myManageHook = composeAll
-    [ className =? "MPlayer"             --> doFloat
-    , className =? "Gimp"                --> doFloat
-    , title     =? "Media viewer"        --> doFloat
-    , resource  =? "desktop_window"      --> doIgnore
-    , resource  =? "kdesktop"            --> doIgnore ]
+myManageHook = composeAll . concat $
+    [ [isDialog --> doCenterFloat]
+    , [className =? c --> doCenterFloat | c <- myCFloats]
+    , [title =? t --> doFloat | t <- myTFloats]
+    , [resource =? r --> doFloat | r <- myRFloats]
+    , [resource =? i --> doIgnore | i <- myIgnores]
+    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61612" | x <- my1Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "2:web" | x <- my2Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "3:dev" | x <- my3Shifts]
+    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61635" | x <- my4Shifts]
+    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61502" | x <- my5Shifts]
+    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61501" | x <- my6Shifts]
+    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61705" | x <- my7Shifts]
+    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61564" | x <- my8Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "9:chat" | x <- my9Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "0:rdp" | x <- my10Shifts]
+    ]
+    where
+    doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
+    myCFloats = ["Arandr", "nm-connection-editor"]
+    myTFloats = ["Downloads", "Save As..."]
+    myRFloats = []
+    myIgnores = ["desktop_window", "kdesktop"]
+    -- my1Shifts = ["Chromium", "Vivaldi-stable", "Firefox"]
+    my2Shifts = ["google-chrome"]
+    my3Shifts = ["code"]
+    -- my4Shifts = []
+    -- my5Shifts = ["Gimp", "feh"]
+    -- my6Shifts = ["vlc", "mpv"]
+    -- my7Shifts = ["Virtualbox"]
+    -- my8Shifts = ["Thunar"]
+    my9Shifts = ["telegram-desktop"]
+    my10Shifts = ["org.remmina.Remmina"]
 
 ------------------------------------------------------------------------
 -- Event handling
