@@ -31,7 +31,7 @@ import qualified Data.Map        as M
 
 myFont = "xft:JetBrainsMono Nerd Font Mono:size=10:bold:antialias=true"
 
-myTerminal      = "alacritty"
+myTerminal      = "urxvt"
 myDMenu="dmenu_run -p [run]: -fn '" ++ myFont ++ "' -nb '" ++ gruvBg ++ "' -nf '" ++ gruvFgDark ++ "' -sf '" ++ gruvBg ++ "' -sb '" ++ gruvYellowLight ++ "' -h 21"
 
 -- Whether focus follows the mouse pointer.
@@ -292,7 +292,10 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-    spawnOnce "xrandr --output LVDS1 --primary --mode 1366x768 --pos 277x1080 --rotate normal --output VGA1 --off --output VIRTUAL1 --off --output LVDS-1-1 --off --output HDMI-1-0 --mode 1920x1080 --pos 0x0 --rotate normal --output VGA-1-1 --off &"
+    setWMName "LG3D"
+    --spawnOnce "xrandr --output LVDS-1 --primary --mode 1366x768 --pos 277x1080 --rotate normal --output VGA-1 --off --output LVDS-1-1 --off --output HDMI-1-0 --mode 1920x1080 --pos 0x0 --rotate normal --output VGA-1-1 --off &"
+    spawnOnce "xrandr --output LVDS-1 --primary --mode 1366x768 --pos 277x1080 --rotate normal --output VGA-1 --mode 1920x1080 --pos 0x0 --rotate normal"
+    -- spawnOnce "xrandr --output LVDS1 --primary --mode 1366x768 --pos 277x1080 --rotate normal --output VGA1 --off --output VIRTUAL1 --off --output LVDS-1-1 --off --output HDMI-1-0 --mode 1920x1080 --pos 0x0 --rotate normal --output VGA-1-1 --off &"
     spawnOnce "setxkbmap -layout us,ir -option grp:caps_toggle &"
     spawnOnce "nitrogen --restore &"
     spawnOnce "trayer --monitor primary --edge top --align right --SetDockType true --SetPartialStrut true --expand true --widthtype request --transparent true --alpha 0 --tint 0x282828  --height 21 &"
